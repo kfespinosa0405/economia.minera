@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marco Económico - Regalías Mineras DMQ | UCE</title>
+    
+    <!-- Google Fonts: Montserrat para títulos, Open Sans para cuerpo -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome para Iconografía -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (CDN) para estilos rápidos y responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js para visualización de datos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'uce-blue': '#18256D',
+                        'uce-dark': '#0F1B5B',
+                        'uce-gray-light': '#F4F5F7',
+                        'uce-graphite': '#3D3D3D',
+                        'uce-gold': '#C58A2B',
+                        'uce-copper': '#B87333',
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 10px 25px -5px rgba(24, 37, 109, 0.1), 0 8px 10px -6px rgba(24, 37, 109, 0.1)',
+                        'floating': '0 20px 40px -10px rgba(184, 115, 51, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados y animaciones */
+        body {
+            background-color: #F4F5F7;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F5F7; }
+        ::-webkit-scrollbar-thumb { background: #18256D; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C58A2B; }
+
+        /* Animaciones de entrada */
+        .fade-in-up {
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Patrón de fondo sutil para la portada */
+        .bg-pattern {
+            background-image: radial-gradient(#18256D 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-color: #0F1B5B;
+        }
+
+        /* Estilo para campos editables */
+        [contenteditable="true"] {
+            transition: all 0.3s ease;
+            border-bottom: 1px dashed transparent;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        [contenteditable="true"]:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #C58A2B;
+            cursor: text;
+        }
+        [contenteditable="true"]:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom-color: #C58A2B;
+        }
+
+        /* Tarjetas interactivas */
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(24, 37, 109, 0.2);
+        }
+
+        /* Componente de Línea de Tiempo */
+        .timeline-container { position: relative; }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%; width: 4px; height: 100%;
+            background: #C58A2B;
+            transform: translateX(-50%);
+        }
+        .timeline-item { width: 50%; padding: 20px; position: relative; }
+        .timeline-item:nth-child(odd) { left: 0; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; text-align: left; }
+        .timeline-item::after {
+            content: ''; position: absolute;
+            width: 20px; height: 20px; background: #18256D; border: 4px solid #C58A2B;
+            border-radius: 50%; top: 50%; transform: translateY(-50%);
+        }
+        .timeline-item:nth-child(odd)::after { right: -12px; }
+        .timeline-item:nth-child(even)::after { left: -12px; }
+
+        @media (max-width: 768px) {
+            .timeline-container::before { left: 20px; }
+            .timeline-item { width: 100%; left: 0 !important; text-align: left !important; padding-left: 50px; }
+            .timeline-item::after { left: 10px !important; }
+        }
+
+        /* Navegación activa */
+        .nav-link.active {
+            background-color: #C58A2B;
+            color: white;
+            font-weight: bold;
+            border-left: 4px solid #FFFFFF;
+        }
+
+        /* Ecuaciones */
+        .math-formula {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+
+        /* Diagrama de flujo simplificado CSS */
+        .flow-node { position: relative; z-index: 2; }
+        .flow-line-v { width: 2px; height: 30px; background-color: #18256D; margin: 0 auto; }
+        .flow-line-h { height: 2px; background-color: #18256D; width: 100%; position: absolute; top: -15px; z-index: 1;}
+    </style>
+</head>
+<body class="flex h-screen antialiased text-uce-graphite">
+
+    <!-- Menú Lateral Móvil (Toggle) -->
+    <div id="mobile-menu-btn" class="lg:hidden fixed top-4 left-4 z-50 bg-uce-blue text-white p-3 rounded-md shadow-lg cursor-pointer">
+        <i class="fas fa-bars text-xl"></i>
+    </div>
+
+    <!-- Menú Lateral -->
+    <aside id="sidebar" class="bg-uce-blue text-white w-72 flex-shrink-0 h-full overflow-y-auto shadow-2xl transition-transform transform -translate-x-full lg:translate-x-0 fixed lg:relative z-40">
+        <div class="p-6 sticky top-0 bg-uce-dark border-b border-uce-blue z-10 flex flex-col items-center">
+            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-3 shadow-floating">
+                <!-- Logo simulado UCE -->
+                <i class="fas fa-university text-4xl text-uce-blue"></i>
+            </div>
+            <h2 class="font-heading font-bold text-center text-sm tracking-wider uppercase text-uce-gold">Universidad Central<br>del Ecuador</h2>
+            <p class="text-xs text-center text-gray-300 mt-2">Menú de Navegación</p>
+        </div>
+        <nav class="p-4 space-y-1 text-sm font-medium pb-20">
+            <a href="#portada" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-home w-6 text-center mr-2 text-uce-gold"></i> Portada</a>
+            <a href="#intro" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-info-circle w-6 text-center mr-2 text-uce-gold"></i> 1. Introducción</a>
+            <a href="#estructura" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-sitemap w-6 text-center mr-2 text-uce-gold"></i> 2. Obligaciones Económicas</a>
+            <a href="#regalias" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-gem w-6 text-center mr-2 text-uce-gold"></i> 3. Regalías Mineras</a>
+            <a href="#info-calculo" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-chart-pie w-6 text-center mr-2 text-uce-gold"></i> 4. Información para Cálculo</a>
+            <a href="#costos" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-truck-pickup w-6 text-center mr-2 text-uce-gold"></i> 5. Costos de Producción</a>
+            <a href="#calculo-regalias" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-calculator w-6 text-center mr-2 text-uce-gold"></i> 6. Cálculo de Regalías</a>
+            <a href="#pago-regalias" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-calendar-alt w-6 text-center mr-2 text-uce-gold"></i> 7. Pago de Regalías</a>
+            <a href="#patentes" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-leaf w-6 text-center mr-2 text-uce-gold"></i> 8. Patentes de Conservación</a>
+            <a href="#tarifas-patente" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-table w-6 text-center mr-2 text-uce-gold"></i> 9. Tarifas de Patente</a>
+            <a href="#tasas" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-file-signature w-6 text-center mr-2 text-uce-gold"></i> 10. Tasas Administrativas</a>
+            <a href="#costos-registrales" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-stamp w-6 text-center mr-2 text-uce-gold"></i> 11. Costos Registrales</a>
+            <a href="#tributos" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-hand-holding-usd w-6 text-center mr-2 text-uce-gold"></i> 12. Tributos Nacionales</a>
+            <a href="#incumplimientos" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-exclamation-triangle w-6 text-center mr-2 text-uce-gold"></i> 13. Incumplimientos</a>
+            <a href="#recuperacion" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-seedling w-6 text-center mr-2 text-uce-gold"></i> 14. Recuperación Ambiental</a>
+            <a href="#conclusiones" class="nav-link flex items-center p-3 rounded-lg hover:bg-uce-dark transition text-gray-200"><i class="fas fa-check-double w-6 text-center mr-2 text-uce-gold"></i> 15. Conclusiones</a>
+        </nav>
+    </aside>
+
+    <!-- Overlay móvil -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
+    <!-- Contenido Principal -->
+    <main id="main-content" class="flex-1 h-full overflow-y-auto scroll-smooth">
+        
+        <!-- ================= PORTADA ================= -->
+        <section id="portada" class="min-h-screen relative bg-pattern flex items-center justify-center p-8 text-white">
+
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-uce-dark opacity-90"></div>
+
+            <div class="relative z-10 max-w-4xl w-full text-center fade-in-up">
+
+                <div class="flex justify-between items-start mb-10">
+                    <img src="logo-uce.png"
+                         alt="Logo UCE"
+                         class="h-24 md:h-28 object-contain"
+                         onerror="this.src='https://placehold.co/150x150/18256d/ffffff?text=UCE'">
+
+                    <img src="logo-vinculacion.png"
+                         alt="Logo Vinculación"
+                         class="h-24 md:h-28 object-contain"
+                         onerror="this.src='https://placehold.co/150x150/b87333/ffffff?text=VINCULACION'">
+                </div>
+
+                <h1 class="font-heading text-3xl md:text-5xl font-extrabold tracking-wide mb-2 uppercase drop-shadow-lg">
+                    Universidad Central del Ecuador
+                </h1>
+
+                <h2 class="text-xl md:text-2xl font-light text-uce-gray-light mb-10 tracking-widest border-b border-uce-gold inline-block pb-2">
+                    Proyecto de Vinculación con la Sociedad
+                </h2>
+
+                <div class="bg-white bg-opacity-10 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white border-opacity-20 shadow-2xl mb-10 fade-in-up delay-100">
+
+                    <h3 class="font-heading text-2xl md:text-4xl font-bold leading-tight mb-6 text-white">
+                        OBLIGACIONES ECONÓMICAS
+                    </h3>
+
+                    <p class="text-lg md:text-xl text-uce-gold font-semibold uppercase tracking-wide">
+                        En la Explotación de Áridos y Pétreos del Distrito Metropolitano de Quito
+                    </p>
+
+                </div>
+
+                <div class="mt-12 animate-bounce">
+                    <a href="#intro">
+                        <i class="fas fa-chevron-down text-3xl text-uce-gold"></i>
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= SECCIÓN 1: INTRODUCCIÓN ================= -->
+        <section id="intro" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">1. Introducción</h2>
+                <p class="text-gray-500 font-semibold mt-1">Obligaciones económicas en la explotación de áridos y pétreos</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-card mb-8">
+                <p class="text-lg leading-relaxed text-gray-700 text-justify mb-4">
+                    La explotación de áridos y pétreos en el Distrito Metropolitano de Quito genera obligaciones económicas destinadas a compensar al Estado por el aprovechamiento de recursos naturales no renovables y a financiar las actividades de control y administración minera.
+                </p>
+                <p class="text-sm text-gray-500 italic mt-2">
+                    * Nota: Ningún GAD Cantonal puede emitir permisos de explotación definitivos sin el cumplimiento obligatorio y previo de la Licencia o Registro Ambiental (MAATE) y la Autorización de Uso de Recursos Hídricos.
+                </p>
+            </div>
+
+            <h3 class="font-heading text-xl font-bold text-uce-dark mb-6 text-center">Principales Obligaciones</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Tarjetas Interactivas -->
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-uce-blue text-center">
+                    <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4 text-uce-blue text-2xl">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Regalías Mineras</h4>
+                    <p class="text-sm text-gray-600">Compensación semestral obligatoria por la extracción de materiales pétreos.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-uce-copper text-center">
+                    <div class="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-4 text-uce-copper text-2xl">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Patentes de Conservación</h4>
+                    <p class="text-sm text-gray-600">Pago por hectárea concesionada para el mantenimiento y vigencia del derecho minero.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-gray-600 text-center">
+                    <div class="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4 text-gray-700 text-2xl">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Tasas Administrativas</h4>
+                    <p class="text-sm text-gray-600">Cobros por registro, inspecciones y renovación de derechos mineros por la U.A.P.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-uce-gold text-center">
+                    <div class="w-16 h-16 mx-auto bg-yellow-100 rounded-full flex items-center justify-center mb-4 text-uce-gold text-2xl">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Costos Operativos</h4>
+                    <p class="text-sm text-gray-600">Erogaciones directas e indirectas asociadas a la extracción y trituración en frente.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-green-600 text-center">
+                    <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-700 text-2xl">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Tributos Nacionales</h4>
+                    <p class="text-sm text-gray-600">Tributación obligatoria de ley que incluye el Impuesto al Valor Agregado (IVA) e Impuesto a la Renta (IR).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-red-500 text-center">
+                    <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-500 text-2xl">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Tasas Provinciales / Locales</h4>
+                    <p class="text-sm text-gray-600">Tributos locales aplicables sobre activos (1.5 por Mil) y patentes vehiculares/viales.</p>
+                </div>
+                <!-- Nueva Tarjeta LUAE y CIIU añadida -->
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-purple-600 text-center">
+                    <div class="w-16 h-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4 text-purple-700 text-2xl">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Licencia (LUAE)</h4>
+                    <p class="text-sm text-gray-600">LUAE Licencia Única de Actividades Económicas.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-card interactive-card border-t-4 border-cyan-600 text-center">
+                    <div class="w-16 h-16 mx-auto bg-cyan-100 rounded-full flex items-center justify-center mb-4 text-cyan-700 text-2xl">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">CIIU</h4>
+                    <p class="text-sm text-gray-600">Clasificación Industrial Internacional Uniforme.</p>
+                </div>
+            </div>
+
+            <!-- SEPARATE BLOCKS FOR LUAE AND CIIU REMOVED FROM HERE -->
+        </section>
+
+        <!-- ================= SECCIÓN 2: ESTRUCTURA ================= -->
+        <section id="estructura" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">2. Estructura de las Obligaciones</h2>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-card overflow-x-auto">
+                <!-- Diagrama de Flujo CSS -->
+                <div class="min-w-[800px] py-10">
+                    <div class="text-center mb-8 flow-node">
+                        <div class="inline-block bg-uce-blue text-white font-bold py-3 px-8 rounded-lg shadow-md uppercase tracking-wide">
+                            OBLIGACIONES ECONÓMICAS MINERAS
+                        </div>
+                    </div>
+                    <div class="flow-line-v"></div>
+                    
+                    <div class="relative mt-8">
+                        <div class="flow-line-h"></div>
+                        <div class="flex justify-between relative z-10 px-4">
+                            
+                            <!-- Nodo 1 -->
+                            <div class="w-1/4 px-2 text-center">
+                                <div class="w-4 h-4 bg-uce-blue rounded-full mx-auto -mt-2.5 mb-2 relative z-20"></div>
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm h-full interactive-card">
+                                    <h4 class="font-bold text-uce-dark border-b border-blue-200 pb-2 mb-3 text-sm">Por Explotación</h4>
+                                    <ul class="text-sm text-gray-700 space-y-2 text-left list-disc pl-4">
+                                        <li><span class="font-semibold text-uce-blue">Regalías mineras</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Nodo 2 -->
+                            <div class="w-1/4 px-2 text-center">
+                                <div class="w-4 h-4 bg-uce-blue rounded-full mx-auto -mt-2.5 mb-2 relative z-20"></div>
+                                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 shadow-sm h-full interactive-card">
+                                    <h4 class="font-bold text-uce-copper border-b border-orange-200 pb-2 mb-3 text-sm">Por Conservación</h4>
+                                    <ul class="text-sm text-gray-700 space-y-2 text-left list-disc pl-4">
+                                        <li><span class="font-semibold text-uce-copper">Patente de conservación</span></li>
+                                        <li><span class="font-semibold text-uce-copper">Habilitante LUAE</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Nodo 3 -->
+                            <div class="w-1/4 px-2 text-center">
+                                <div class="w-4 h-4 bg-uce-blue rounded-full mx-auto -mt-2.5 mb-2 relative z-20"></div>
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm h-full interactive-card">
+                                    <h4 class="font-bold text-gray-800 border-b border-gray-200 pb-2 mb-3 text-sm">Administrativas</h4>
+                                    <ul class="text-xs text-gray-700 space-y-1.5 text-left list-disc pl-4">
+                                        <li>Otorgamiento de derechos</li>
+                                        <li>Registro minero U.A.P.</li>
+                                        <li>Inspecciones técnicas</li>
+                                        <li>Inspecciones de control</li>
+                                        <li>Administración de derechos</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Nodo 4 -->
+                            <div class="w-1/4 px-2 text-center">
+                                <div class="w-4 h-4 bg-uce-blue rounded-full mx-auto -mt-2.5 mb-2 relative z-20"></div>
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 shadow-sm h-full interactive-card">
+                                    <h4 class="font-bold text-green-800 border-b border-green-200 pb-2 mb-3 text-sm">Tributarias</h4>
+                                    <ul class="text-sm text-gray-700 space-y-2 text-left list-disc pl-4">
+                                        <li>IVA (15%)</li>
+                                        <li>Impuesto a la Renta (25%)</li>
+                                        <li>Impuesto 1.5 por Mil</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 3: REGALÍAS MINERAS ================= -->
+        <section id="regalias" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">3. Regalías Mineras</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-card border-l-4 border-uce-blue">
+                        <h3 class="font-bold text-lg text-uce-dark mb-2"><i class="fas fa-book-open mr-2 text-uce-gold"></i> Concepto</h3>
+                        <p class="text-gray-700 text-justify">Las regalías son pagos obligatorios realizados por los concesionarios al Estado y GADs municipales debido a la explotación de recursos minerales no renovables. Es una contraprestación económica ineludible por el desgaste y pérdida de la reserva física pétrea de la cantera.</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-card">
+                        <h3 class="font-bold text-lg text-uce-dark mb-4"><i class="fas fa-star text-uce-gold mr-2"></i> Importancia</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i><span class="text-gray-700">Generan ingresos directos para el Estado y el GAD del DMQ.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i><span class="text-gray-700">Financian proyectos sociales y de remediación ambiental comunitaria.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i><span class="text-gray-700">Contribuyen al desarrollo territorial de las zonas de influencia directa.</span></li>
+                            <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i><span class="text-gray-700">Permiten la fiscalización, control y auditoría técnica de la producción.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-card flex flex-col justify-center">
+                    <h3 class="font-bold text-center text-gray-700 mb-4 text-sm uppercase">Impacto Económico Social (Simulación)</h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 4: INFORMACIÓN PARA CÁLCULO ================= -->
+        <section id="info-calculo" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">4. Información para el Cálculo de Regalías</h2>
+                <p class="text-gray-500 font-semibold mt-1">Variables clave requeridas para la declaración</p>
+            </div>
+
+            <!-- Dashboard style -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg shadow-card text-center border-b-4 border-blue-500">
+                    <i class="fas fa-cubes text-3xl text-blue-500 mb-2"></i>
+                    <h4 class="text-xs text-gray-500 uppercase font-bold">Vol. Explotado</h4>
+                    <p class="text-lg font-bold text-uce-dark">m³</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-card text-center border-b-4 border-green-500">
+                    <i class="fas fa-truck-loading text-3xl text-green-500 mb-2"></i>
+                    <h4 class="text-xs text-gray-500 uppercase font-bold">Vol. Comercializado</h4>
+                    <p class="text-lg font-bold text-uce-dark">m³</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-card text-center border-b-4 border-red-400">
+                    <i class="fas fa-warehouse text-3xl text-red-400 mb-2"></i>
+                    <h4 class="text-xs text-gray-500 uppercase font-bold">Vol. No Comercial</h4>
+                    <p class="text-lg font-bold text-uce-dark">m³ (Stock)</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-card text-center border-b-4 border-uce-gold">
+                    <i class="fas fa-tags text-3xl text-uce-gold mb-2"></i>
+                    <h4 class="text-xs text-gray-500 uppercase font-bold">Precio Promedio</h4>
+                    <p class="text-lg font-bold text-uce-dark">USD / m³</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-5 rounded-lg border border-blue-100 flex items-center shadow-sm">
+                    <div class="bg-blue-100 p-3 rounded-full mr-4"><i class="fas fa-dollar-sign text-blue-600 text-xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">Ingresos Totales</h4>
+                        <p class="text-xs text-gray-600">Ventas brutas obtenidas en el periodo</p>
+                    </div>
+                </div>
+                <div class="bg-yellow-50 p-5 rounded-lg border border-yellow-100 flex items-center shadow-sm">
+                    <div class="bg-yellow-100 p-3 rounded-full mr-4"><i class="fas fa-calendar-alt text-yellow-600 text-xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">Días Laborados</h4>
+                        <p class="text-xs text-gray-600">Tiempo de operación semestral activa</p>
+                    </div>
+                </div>
+                <div class="bg-red-50 p-5 rounded-lg border border-red-100 flex items-center shadow-sm">
+                    <div class="bg-red-100 p-3 rounded-full mr-4"><i class="fas fa-calculator text-red-600 text-xl"></i></div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">Costos de Producción</h4>
+                        <p class="text-xs text-gray-600">Suma total de gastos de explotación</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Referencia -->
+            <div class="bg-white p-6 rounded-xl shadow-card mt-8 border-t-4 border-uce-blue">
+                <h4 class="font-bold text-uce-dark mb-4 text-center">Modelo de Formulario de Declaración de Regalías</h4>
+                <img src="regalias.png" alt="Formulario de Declaración de Regalías" class="w-full h-auto rounded-lg border border-gray-200 shadow-sm" onerror="this.src='https://placehold.co/800x400/eeeeee/333333?text=Formulario+Regalías'">
+                <p class="text-[10px] text-gray-400 mt-2 italic text-right">Fuente: Unidad de Áridos y Pétreos - DMQ</p>"</p>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 5: COSTOS DE PRODUCCIÓN ================= -->
+        <section id="costos" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">5. Costos de Producción</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Columnas de costos -->
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Costos Directos -->
+                    <div class="bg-white rounded-xl shadow-card overflow-hidden">
+                        <div class="bg-uce-blue text-white p-3 text-center font-bold">Costos Directos</div>
+                        <ul class="p-4 space-y-2 text-sm text-gray-700">
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-hard-hat text-gray-400 mr-2"></i>Mano de obra</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-handshake text-gray-400 mr-2"></i>Beneficios sociales</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-utensils text-gray-400 mr-2"></i>Alimentación</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-gas-pump text-gray-400 mr-2"></i>Combustibles</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-tractor text-gray-400 mr-2"></i>Maquinaria</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-tools text-gray-400 mr-2"></i>Repuestos</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-truck text-gray-400 mr-2"></i>Transporte interno</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-shield-alt text-gray-400 mr-2"></i>Seguridad industrial</span></li>
+                            <li class="flex justify-between"><span><i class="fas fa-tree text-gray-400 mr-2"></i>Restauración ambiental</span></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Costos Indirectos -->
+                    <div class="bg-white rounded-xl shadow-card overflow-hidden">
+                        <div class="bg-uce-copper text-white p-3 text-center font-bold">Costos Indirectos</div>
+                        <ul class="p-4 space-y-2 text-sm text-gray-700">
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-user-tie text-gray-400 mr-2"></i>Técnico minero</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-search-dollar text-gray-400 mr-2"></i>Auditor minero</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-gavel text-gray-400 mr-2"></i>Asesor legal</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-file-invoice text-gray-400 mr-2"></i>Honorarios</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-building text-gray-400 mr-2"></i>Administración</span></li>
+                            <li class="flex justify-between border-b pb-1"><span><i class="fas fa-percentage text-gray-400 mr-2"></i>Impuestos</span></li>
+                            <li class="flex justify-between"><span><i class="fas fa-certificate text-gray-400 mr-2"></i>Patente de conservación</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="bg-white p-6 rounded-xl shadow-card flex flex-col items-center justify-center">
+                    <h4 class="font-bold text-center text-sm mb-4">Estructura de Costos Promedio</h4>
+                    <div class="relative w-full max-w-[250px]">
+                        <canvas id="costosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 6: CÁLCULO DE REGALÍAS ================= -->
+        <section id="calculo-regalias" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">6. Cálculo de las Regalías</h2>
+            </div>
+
+            <!-- PORCENTAJE PAGO DE REGALÍAS REGLAMENTARIO (REEMPLAZO TOTAL SOLICITADO) -->
+            <div class="bg-white p-8 rounded-xl shadow-card mb-8 border-l-4 border-uce-blue">
+                <h3 class="font-heading font-black text-xl text-uce-dark mb-4 uppercase tracking-wide">
+                    PORCENTAJE "Pago de regalías"<br>
+                    <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block mt-1">Según el Artículo 2844 del Código Municipal para el MDMQ</span>
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- PM -->
+                    <div class="p-6 bg-blue-50 rounded-xl border border-blue-200 flex flex-col justify-between">
+                        <div>
+                            <span class="font-black text-uce-blue text-2xl tracking-wide block">PM</span>
+                            <span class="text-xl font-black text-uce-dark block mt-1">3%</span>
+                            <p class="font-mono text-xs text-gray-600 mt-2 bg-white px-2 py-1 rounded inline-block">CP × V.E</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-blue-100">
+                            <p class="text-xs text-gray-700 font-bold">Capacidad:</p>
+                            <p class="text-xs text-gray-600 mt-0.5">500 Tm - 800 m³ diarios</p>
+                            <p class="text-[10px] text-gray-500">A cielo abierto en roca dura (Pequeña Minería).</p>
+                        </div>
+                    </div>
+
+                    <!-- MM -->
+                    <div class="p-6 bg-yellow-50 rounded-xl border border-yellow-200 flex flex-col justify-between">
+                        <div>
+                            <span class="font-black text-uce-gold text-2xl tracking-wide block">MM</span>
+                            <span class="text-xl font-black text-uce-dark block mt-1">4%</span>
+                            <p class="font-mono text-xs text-gray-600 mt-2 bg-white px-2 py-1 rounded inline-block">CP × V.E</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-yellow-200">
+                            <p class="text-xs text-gray-700 font-bold">Capacidad:</p>
+                            <p class="text-xs text-gray-600 mt-0.5">1000 Tm - 1600 m³ diarios</p>
+                            <p class="text-[10px] text-gray-500">A cielo abierto en roca dura (Mediana Minería).</p>
+                        </div>
+                    </div>
+
+                    <!-- GM -->
+                    <div class="p-6 bg-red-50 rounded-xl border border-red-200 flex flex-col justify-between">
+                        <div>
+                            <span class="font-black text-red-700 text-2xl tracking-wide block">GM</span>
+                            <span class="text-xl font-black text-uce-dark block mt-1">5%</span>
+                            <p class="font-mono text-xs text-gray-600 mt-2 bg-white px-2 py-1 rounded inline-block">CP × V.E</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-red-200">
+                            <p class="text-xs text-gray-700 font-bold">Capacidad:</p>
+                            <p class="text-xs text-gray-600 mt-0.5">>1000 Tm o > 1600 m³ diarios</p>
+                            <p class="text-[10px] text-gray-500">A cielo abierto en roca dura (Pequeña Minería Alta/Gran Escala).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-red-100 text-red-950 rounded-lg text-xs leading-relaxed font-semibold">
+                    <i class="fas fa-exclamation-triangle mr-1 text-red-700"></i> La evasión del pago de regalías será causal de caducidad inmediata del derecho minero y de la Autorización Metropolitana para explotación de áridos y pétreos, sin perjuicio de los efectos civiles y penales a que hubiera lugar.
+                </div>
+
+                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-gray-700">
+                    <i class="fas fa-file-invoice-dollar mr-1 text-uce-blue"></i> Las declaraciones y cálculos correspondientes a estos porcentajes de ley se corroboran técnicamente contra las planillas semestrales del expediente fiscal.
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Fórmulas -->
+                <div class="space-y-6 flex flex-col justify-between">
+                    <div class="bg-uce-dark text-white p-6 rounded-xl shadow-card relative overflow-hidden">
+                        <div class="absolute top-0 right-0 opacity-10 text-9xl"><i class="fas fa-subscript"></i></div>
+                        <h3 class="font-bold text-uce-gold mb-4 border-b border-gray-600 pb-2">1. Costo Unitario de Producción</h3>
+                        <div class="text-center py-4 bg-black bg-opacity-30 rounded-lg mb-4">
+                            <span class="math-formula text-2xl tracking-widest">CUP = <span class="border-b border-white px-2">CTP</span> / VE</span>
+                        </div>
+                        <div class="text-sm font-light space-y-1">
+                            <p><span class="font-bold text-uce-gold">CUP:</span> Costo Unitario de Producción ($/m³)</p>
+                            <p><span class="font-bold text-uce-gold">CTP:</span> Costo Total de Producción ($)</p>
+                            <p><span class="font-bold text-uce-gold">VE:</span> Volumen Explotado (m³)</p>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 italic">Fuente: Unidad de Áridos y Pétreos - DMQ</p>
+                    </div>
+
+                    <div class="bg-uce-blue text-white p-6 rounded-xl shadow-card relative overflow-hidden">
+                        <h3 class="font-bold text-uce-gold mb-4 border-b border-blue-400 pb-2">2. Regalía Minera Semestral</h3>
+                        <div class="text-center py-4 bg-black bg-opacity-30 rounded-lg mb-4">
+                            <span class="math-formula text-2xl tracking-widest">RM = VE × CUP × %</span>
+                        </div>
+                        <div class="text-sm font-light">
+                            <p><span class="font-bold text-uce-gold">%:</span> Porcentaje según volumen diario (3%, 4% o 5% según Art. 2844).</p>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 italic">Fuente: Unidad de Áridos y Pétreos - DMQ</p>
+                    </div>
+                </div>
+
+                <!-- Calculadora Interactiva -->
+                <div class="bg-white p-6 rounded-xl shadow-card border-t-4 border-uce-gold flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-xl text-uce-dark mb-4 text-center"><i class="fas fa-calculator text-uce-gold mr-2"></i> Calculadora de Regalías</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Volumen Explotado Semestral (VE) - m³</label>
+                                <input type="number" id="calc-ve" class="w-full border-gray-300 rounded-md shadow-sm p-2 border focus:border-uce-blue focus:ring focus:ring-blue-200 outline-none" placeholder="Ej: 164254" value="164254">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Costo Total de Prod. (CTP) - USD</label>
+                                <input type="number" id="calc-ctp" class="w-full border-gray-300 rounded-md shadow-sm p-2 border focus:border-uce-blue focus:ring focus:ring-blue-200 outline-none" placeholder="Ej: 809833" value="809833">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Porcentaje de Regalía (%) - Art. 2844</label>
+                                <select id="calc-porcentaje" class="w-full border-gray-300 rounded-md shadow-sm p-2 border focus:border-uce-blue focus:ring focus:ring-blue-200 outline-none">
+                                    <option value="5">5% (GM - >1000 TM / >1600 m³ diarios)</option>
+                                    <option value="4">4% (MM - Hasta 1000 TM / 1600 m³ diarios)</option>
+                                    <option value="3">3% (PM - Hasta 500 TM / 800 m³ diarios)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-bold text-gray-600">Costo Unitario Promedio (CUP):</span>
+                            <span id="res-cup" class="font-bold text-uce-blue">$ 4.93</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-300">
+                            <span class="font-bold text-gray-800">Regalía Semestral:</span>
+                            <span id="res-rm" class="text-2xl font-extrabold text-green-600">$ 40,491.65</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 7: PAGO DE REGALÍAS ================= -->
+        <section id="pago-regalias" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">7. Pago de las Regalías</h2>
+                <p class="text-gray-500 font-semibold mt-1">Cronograma semestral de declaración y pago</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-card">
+                <div class="timeline-container py-4">
+                    
+                    <!-- Semestre 1 -->
+                    <div class="timeline-item">
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-uce-blue mb-1">Primer Semestre Explotación</h4>
+                            <p class="text-sm text-gray-600"><i class="fas fa-calendar mr-1"></i> Enero - Junio</p>
+                        </div>
+                    </div>
+
+                    <!-- Declaración 1 -->
+                    <div class="timeline-item">
+                        <div class="bg-green-50 border border-green-200 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-green-700 mb-1">Declaración y Pago</h4>
+                            <p class="text-sm font-bold text-gray-800 bg-white inline-block px-3 py-1 rounded shadow mt-2"><i class="fas fa-exclamation-circle text-red-500 mr-1"></i> Hasta Septiembre</p>
+                        </div>
+                    </div>
+
+                    <!-- Semestre 2 -->
+                    <div class="timeline-item">
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-uce-blue mb-1">Segundo Semestre Explotación</h4>
+                            <p class="text-sm text-gray-600"><i class="fas fa-calendar mr-1"></i> Julio - Diciembre</p>
+                        </div>
+                    </div>
+
+                    <!-- Declaración 2 -->
+                    <div class="timeline-item">
+                        <div class="bg-green-50 border border-green-200 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-green-700 mb-1">Declaración y Pago</h4>
+                            <p class="text-sm font-bold text-gray-800 bg-white inline-block px-3 py-1 rounded shadow mt-2"><i class="fas fa-exclamation-circle text-red-500 mr-1"></i> Hasta Marzo (año siguiente)</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 8 y 9: PATENTES DE CONSERVACIÓN Y TARIFAS ================= -->
+        <section id="patentes" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">8 & 9. Patentes de Conservación</h2>
+            </div>
+
+            <!-- Se ha eliminado el bloque duplicado correspondiente a "image_12a7aa.png" -->
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Concepto -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-card">
+                        <h3 class="font-bold text-lg text-uce-dark mb-4 border-b pb-2">Características Principales de Patente (Art. 2805)</h3>
+                        <ul class="space-y-3 text-xs">
+                            <li class="flex items-start"><i class="fas fa-chevron-right text-uce-gold mt-1 mr-3"></i><span class="text-gray-700"><strong>Artículo 2805.- Patente de conservación para concesión.-</strong> El beneficiario pagará en el mes de marzo de cada año una patente municipal por cada hectárea o fracción de hectárea; equivalente al 10% de una RBU.</span></li>
+                            <li class="flex items-start"><i class="fas fa-chevron-right text-uce-gold mt-1 mr-3"></i><span class="text-gray-700">Para los de <strong>Régimen de Pequeña Minería</strong> se pagará el <strong>2% de una RBU</strong> por hectárea, siempre y cuando presente la calificación emitida por ARCOM.</span></li>
+                            <li class="flex items-start"><i class="fas fa-chevron-right text-uce-gold mt-1 mr-3"></i><span class="text-gray-700 font-bold text-red-600">NO SE OTORGARÁ PRÓRROGA PARA EL PAGO DE LA PATENTE.</span></li>
+                            <li class="flex items-start"><i class="fas fa-chevron-right text-uce-gold mt-1 mr-3"></i><span class="text-gray-700">Es independiente del volumen producido y mantiene activo el derecho.</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tabla de Tarifas -->
+                    <div id="tarifas-patente" class="bg-white rounded-xl shadow-card overflow-hidden">
+                        <div class="bg-uce-dark text-white p-4 font-bold text-center">Tarifas (Porcentaje del SBU)</div>
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700">
+                                <tr>
+                                    <th class="px-4 py-3">Modalidad / Fase</th>
+                                    <th class="px-4 py-3 text-center">Tarifa (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-yellow-50 cursor-pointer transition" onclick="setTarifa(0.02)">
+                                    <td class="px-4 py-3 font-medium">Pequeña minería (Con calificación)</td>
+                                    <td class="px-4 py-3 text-center font-bold text-uce-blue">2%</td>
+                                </tr>
+                                <tr class="border-b hover:bg-yellow-50 cursor-pointer transition" onclick="setTarifa(0.025)">
+                                    <td class="px-4 py-3 font-medium">Exploración inicial</td>
+                                    <td class="px-4 py-3 text-center font-bold text-uce-blue">2.5%</td>
+                                </tr>
+                                <tr class="border-b hover:bg-yellow-50 cursor-pointer transition" onclick="setTarifa(0.05)">
+                                    <td class="px-4 py-3 font-medium">Exploración avanzada</td>
+                                    <td class="px-4 py-3 text-center font-bold text-uce-blue">5%</td>
+                                </tr>
+                                <tr class="border-b hover:bg-yellow-50 cursor-pointer transition" onclick="setTarifa(0.05)">
+                                    <td class="px-4 py-3 font-medium">Evaluación económica</td>
+                                    <td class="px-4 py-3 text-center font-bold text-uce-blue">5%</td>
+                                </tr>
+                                <tr class="hover:bg-yellow-50 cursor-pointer transition bg-blue-50" onclick="setTarifa(0.10)">
+                                    <td class="px-4 py-3 font-medium">Explotación / Régimen General</td>
+                                    <td class="px-4 py-3 text-center font-bold text-uce-blue">10%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="p-2 text-xs text-center text-gray-500 bg-gray-50 italic">Clic en una fila para usar en la calculadora</div>
+                    </div>
+                </div>
+
+                <!-- Calculadora Patente -->
+                <div>
+                    <div class="bg-uce-blue text-white p-6 rounded-xl shadow-card relative overflow-hidden mb-6">
+                        <h3 class="font-bold text-uce-gold mb-4 border-b border-blue-400 pb-2">Fórmula de Cálculo</h3>
+                        <div class="text-center py-4 bg-black bg-opacity-30 rounded-lg">
+                            <span class="math-formula text-xl tracking-wide">Patente = (SBU × Tarifa) × Hectáreas</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2 italic">Fuente: Unidad de Áridos y Pétreos - DMQ</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-card border-t-4 border-uce-copper">
+                        <h3 class="font-bold text-xl text-uce-dark mb-4 text-center">Simulador Automático</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Salario Básico Unificado (SBU) - USD</label>
+                                <input type="number" id="calc-sbu" class="w-full border-gray-300 rounded-md shadow-sm p-2 border focus:border-uce-copper outline-none" value="460">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Tarifa (Decimal)</label>
+                                    <input type="number" step="0.001" id="calc-tarifa" class="w-full border-gray-300 rounded-md shadow-sm p-2 border bg-gray-100 outline-none" value="0.10" readonly>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Hectáreas (Ha)</label>
+                                    <input type="number" id="calc-ha" class="w-full border-gray-300 rounded-md shadow-sm p-2 border focus:border-uce-copper outline-none" value="36">
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200 text-center">
+                                <span class="font-bold text-gray-800 block mb-1">Valor Anual a Pagar:</span>
+                                <span id="res-patente" class="text-3xl font-extrabold text-uce-copper">$ 1,656.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-card mt-6 border-t-4 border-uce-blue">
+                        <h4 class="font-bold text-uce-dark mb-4 text-center">Formulario de Declaración de Patentes</h4>
+                        <img src="patentes.png" alt="Formulario de Declaración de Patentes" class="w-full h-auto rounded-lg border border-gray-200 shadow-sm" onerror="this.src='https://placehold.co/800x400/eeeeee/333333?text=Formulario+Patentes'">
+                        <p class="text-[10px] text-gray-400 mt-2 italic text-right">Fuente: Unidad de Áridos y Pétreos - DMQ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- ================= SECCIÓN 10: LUAE Y CIIU ================= -->
+        <section id="luae-ciiu" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">10. Licencia Metropolitana Única (LUAE)</h2>
+                <p class="text-gray-500 font-semibold mt-1">Acto administrativo habilitante y clasificación CIIU</p>
+            </div>
+            <div class="grid grid-cols-1 gap-6 mb-8">
+            <!-- BLOQUES DE LUAE Y CIIU TRASLADADOS AQUÍ -->
+            <div class="grid grid-cols-1 gap-6 mb-8">
+                <!-- Recuadro LUAE (Basado en image_12a30b.png) -->
+                <div class="bg-purple-50 p-6 rounded-xl border border-purple-200 shadow-sm interactive-card">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-purple-100 p-2.5 rounded-lg text-purple-700 text-lg">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-purple-900 uppercase font-heading">Licencia Metropolitana Única (LUAE)</h4>
+                    </div>
+                    <p class="text-sm text-purple-950 text-justify leading-relaxed mb-4">
+                        La LUAE es el acto administrativo único con el que el Municipio autoriza el funcionamiento de los establecimientos. Rige bajo la <strong>Ordenanza Metropolitana No. 126</strong>.
+                        <br><br>
+                        <strong>Actualización de Impacto (2025-2026):</strong> Mediante la Ordenanza Metropolitana Nro. 093-2025, se extendió la vigencia de las categorías I y II de forma automática, sin embargo, las oficinas operativas de minería no acceden a este beneficio.
+                    </p>
+                    <div class="bg-white p-4 rounded-lg border border-red-200 shadow-inner">
+                        <h5 class="text-red-700 font-bold text-sm mb-2"><i class="fas fa-exclamation-triangle mr-2"></i> Categoría III - Riesgo Alto (Control Riguroso)</h5>
+                        <p class="text-xs text-gray-700 leading-relaxed">
+                            Aplica a plantas de beneficio, oficinas de explotación y frentes de cantera. No admite renovación automática en línea. Exige obligatoriamente inspecciones presenciales del Cuerpo de Bomberos del DMQ, quienes evalúan el área de infraestructura (m²) y el riesgo de almacenamiento de insumos inflamables o explosivos.
+                        </p>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 italic text-right">Fuente: Unidad de Áridos y Pétreos - DMQ</p>
+                </div>
+
+                <!-- Recuadro CIIU (Basado en image_12a389.png) -->
+                <div class="bg-cyan-50 p-6 rounded-xl border border-cyan-200 shadow-sm interactive-card">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-cyan-100 p-2.5 rounded-lg text-cyan-700 text-lg">
+                            <i class="fas fa-list-ol"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-cyan-900 uppercase font-heading">Códigos de Actividades Económicas (CIIU) aplicables en Quito</h4>
+                    </div>
+                    <p class="text-sm text-cyan-950 mb-6">La clasificación CIIU (Revisión 4) delimita los controles ambientales y de LUAE requeridos en la Sección B (Explotación de Minas y Canteras):</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-3 rounded border border-cyan-100 shadow-sm">
+                            <h6 class="font-bold text-cyan-800 text-xs">B0729.11</h6>
+                            <p class="text-[11px] text-gray-600">Extracción y procesamiento de minerales metálicos no ferrosos (oro, plata, cobre).</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border border-cyan-200 shadow-sm ring-2 ring-cyan-200">
+                            <h6 class="font-bold text-cyan-900 text-xs">B0810.01 (Competencia GAD)</h6>
+                            <p class="text-[11px] text-gray-700 font-medium">Extracción de piedra, arena y arcilla (Código central de control y cobro de regalías de los GADs).</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border border-cyan-100 shadow-sm">
+                            <h6 class="font-bold text-cyan-800 text-xs">B0990.00</h6>
+                            <p class="text-[11px] text-gray-600">Actividades de servicios de apoyo para la minería (perforación, muestreo, etc.).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            </div>
+        </section>
+
+<!-- ================= SECCIÓN 10 y 11: TASAS Y COSTOS REGISTRALES ================= -->
+        <section id="tasas" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">12. Tasas y Costos Administrativos</h2>
+                <p class="text-gray-500 font-semibold mt-1">Base Legal: Art. 1718. Servicios de administración pública.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Tasas Administrativas (Removido Catastro Minero) -->
+                <div>
+                    <h3 class="font-bold text-xl text-uce-dark mb-4"><i class="fas fa-file-signature text-uce-gold mr-2"></i> Servicios Administrativos</h3>
+                    <div class="space-y-3">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 interactive-card flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4 text-blue-600"><i class="fas fa-gavel"></i></div>
+                            <div><h4 class="font-bold text-gray-800">Otorgamiento de Derechos</h4><p class="text-xs text-gray-500">Otorgamiento de concesiones o autorizaciones municipales.</p></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 interactive-card flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4 text-blue-600"><i class="fas fa-book"></i></div>
+                            <div><h4 class="font-bold text-gray-800">Registro Minero U.A.P.</h4><p class="text-xs text-gray-500">Inscripción formal de actos, contratos y cesiones.</p></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 interactive-card flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4 text-blue-600"><i class="fas fa-search"></i></div>
+                            <div><h4 class="font-bold text-gray-800">Inspecciones Técnicas y de Control</h4><p class="text-xs text-gray-500">Verificación de frentes de producción y combustibles.</p></div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 interactive-card flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4 text-blue-600"><i class="fas fa-balance-scale"></i></div>
+                            <div><h4 class="font-bold text-gray-800">Administración de Derechos</h4><p class="text-xs text-gray-500">Resolución de expedientes y renovación de derechos.</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Costos Registrales -->
+                <div id="costos-registrales">
+                    <h3 class="font-bold text-xl text-uce-dark mb-4"><i class="fas fa-stamp text-uce-gold mr-2"></i> Costos Registrales Fijos</h3>
+                    <div class="bg-white rounded-xl shadow-card overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead class="bg-uce-blue text-white">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Trámite / Servicio Registral</th>
+                                    <th class="px-4 py-3 text-right">Costo (USD)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Inscripción concesión exploración</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 30.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Inscripción concesión explotación</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 60.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Certificado de propiedad</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 7.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Cancelación de gravámenes</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 5.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Índice de propiedades</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 4.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-gray-800">Matrícula inmobiliaria</td>
+                                    <td class="px-4 py-3 text-right font-bold text-uce-blue">$ 3.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium text-red-600">Embargos y demandas</td>
+                                    <td class="px-4 py-3 text-right font-bold text-red-600">$ 8.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 12: TRIBUTOS NACIONALES ================= -->
+        <section id="tributos" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-uce-gold pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">13. Obligaciones Tributarias</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-card flex items-center border-l-4 border-blue-500">
+                        <div class="text-4xl text-blue-500 mr-6 font-bold">15%</div>
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Impuesto al Valor Agregado (IVA)</h4>
+                            <p class="text-sm text-gray-600">Aplicable en la facturación comercial de áridos y pétreos según la normativa nacional.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-card flex items-center border-l-4 border-green-600">
+                        <div class="text-4xl text-green-600 mr-6 font-bold">25%</div>
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Impuesto a la Renta (IR)</h4>
+                            <p class="text-sm text-gray-600">Grava la utilidad neta de la operación minera obtenida al cierre del ejercicio contable semestral/anual.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-card">
+                    <h4 class="font-bold text-center text-sm mb-4">Carga Impositiva sobre Utilidad (Ilustrativo)</h4>
+                    <div class="relative h-48 w-full">
+                        <canvas id="tributosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white p-8 rounded-xl shadow-card border border-gray-200">
+                <h3 class="font-heading text-xl font-bold text-uce-blue mb-6 flex items-center">
+                    <i class="fas fa-hand-holding-usd text-uce-gold mr-3"></i> Impuesto del 1.5 por Mil y Tasas Municipales
+                </h3>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 1.5 por mil -->
+                    <div class="bg-green-50 p-6 rounded-xl border border-green-200 shadow-sm interactive-card">
+                        <h4 class="font-bold text-green-800 mb-2">Impuesto 1.5 por Mil sobre los Activos Totales</h4>
+                        <p class="text-sm text-gray-700 mb-4">Es obligatorio para personas jurídicas y naturales que ejercen actividad comercial. Se liquida aplicando el factor 0.0015 sobre los activos declarados en el ejercicio anterior:</p>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-green-100 shadow-sm text-xs font-mono text-center font-bold">
+                                Base Imponible = Activos Totales - Pasivos Corrientes - Deducciones de Ley
+                            </div>
+                            <div class="bg-white p-3 rounded border border-green-100 shadow-sm text-xs font-mono text-center font-bold">
+                                Impuesto 1.5 por Mil = Base Imponible × 0.0015
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vehículos -->
+                    <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm interactive-card">
+                        <h4 class="font-bold text-blue-800 mb-2">Impuesto a Vehículos y Patente de Rodaje (AMT)</h4>
+                        <p class="text-sm text-gray-700">Si el concesionario minero opera maquinaria pesada, vehículos de transporte de carga o plantas trituradoras móviles por las vías cantonales, se liquidan las correspondientes tasas de rodaje y matriculación locales administradas por la Agencia Metropolitana de Tránsito (AMT) y el DMQ.</p>
+                    </div>
+        </section>
+
+        <!-- ================= SECCIÓN 13: INCUMPLIMIENTOS ================= -->
+        <section id="incumplimientos" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-red-500 pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-red-600">13. Consecuencias del Incumplimiento</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Financieras -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                    <h3 class="font-bold text-xl text-red-700 mb-4 text-center"><i class="fas fa-money-bill-wave mr-2"></i> Consecuencias Financieras</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Multas Sancionatorias</span>
+                            <i class="fas fa-times-circle text-red-400"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-500 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Intereses por Mora</span>
+                            <i class="fas fa-chart-line text-red-500"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-600 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Juicios de Cobro Coactivo</span>
+                            <i class="fas fa-gavel text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operativas -->
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                    <h3 class="font-bold text-xl text-orange-700 mb-4 text-center"><i class="fas fa-ban mr-2"></i> Consecuencias Operativas</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-orange-400 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Suspensión de Actividades</span>
+                            <i class="fas fa-pause-circle text-orange-400"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-orange-500 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Pérdida de Derechos</span>
+                            <i class="fas fa-unlink text-orange-500"></i>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-700 flex items-center justify-between">
+                            <span class="font-bold text-gray-700">Caducidad de la Concesión</span>
+                            <i class="fas fa-skull-crossbones text-red-700"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 14: RECUPERACIÓN AMBIENTAL ================= -->
+        <section id="recuperacion" class="scroll-mt-10 p-8">
+            <div class="border-l-4 border-green-500 pl-4 mb-8">
+                <h2 class="font-heading text-3xl font-bold text-green-700">14. Recuperación Ambiental</h2>
+                <p class="text-gray-500 font-semibold mt-1">Obligación integral (Art. 2361) que impacta en los costos.</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-card">
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 text-center">
+                    
+                    <div class="bg-green-50 w-full md:w-1/4 p-6 rounded-xl border border-green-200">
+                        <i class="fas fa-leaf text-4xl text-green-600 mb-3"></i>
+                        <h4 class="font-bold text-gray-800 text-sm">Restauración de Áreas</h4>
+                        <p class="text-xs text-gray-600 mt-2">Revegetación y estabilización de taludes.</p>
+                    </div>
+                    
+                    <i class="fas fa-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                    <i class="fas fa-arrow-down text-2xl text-gray-300 md:hidden"></i>
+                    
+                    <div class="bg-green-50 w-full md:w-1/4 p-6 rounded-xl border border-green-200">
+                        <i class="fas fa-recycle text-4xl text-green-600 mb-3"></i>
+                        <h4 class="font-bold text-gray-800 text-sm">Manejo de Pasivos</h4>
+                        <p class="text-xs text-gray-600 mt-2">Tratamiento de desechos y escombreras.</p>
+                    </div>
+
+                    <i class="fas fa-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                    <i class="fas fa-arrow-down text-2xl text-gray-300 md:hidden"></i>
+
+                    <div class="bg-green-50 w-full md:w-1/4 p-6 rounded-xl border border-green-200">
+                        <i class="fas fa-door-closed text-4xl text-green-600 mb-3"></i>
+                        <h4 class="font-bold text-gray-800 text-sm">Cierre de Minas</h4>
+                        <p class="text-xs text-gray-600 mt-2">Abandono técnico y monitoreo post-cierre.</p>
+                    </div>
+
+                </div>
+                <div class="mt-6 text-center text-sm font-semibold text-gray-600 bg-gray-100 p-3 rounded">
+                    * Estos rubros de restauración y remediación deben estar debidamente provisionados dentro de los Costos de Producción de la cantera.
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECCIÓN 15: CONCLUSIONES ================= -->
+        <section id="conclusiones" class="scroll-mt-10 p-8 pb-20">
+            <div class="border-l-4 border-uce-blue pl-4 mb-8 text-center md:text-left">
+                <h2 class="font-heading text-3xl font-bold text-uce-blue">15. Conclusiones</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-uce-blue text-white p-6 rounded-xl shadow-card interactive-card">
+                    <div class="text-3xl text-uce-gold mb-4"><i class="fas fa-gem"></i></div>
+                    <p class="text-sm font-medium leading-relaxed">Las <strong class="text-uce-gold">Regalías Mineras</strong> constituyen la principal obligación económica directa por la extracción, dependiendo estrictamente del volumen explotado y la eficiencia en costos de conformidad con la escala del Art. 2844.</p>
+                </div>
+                <div class="bg-uce-dark text-white p-6 rounded-xl shadow-card interactive-card">
+                    <div class="text-3xl text-uce-gold mb-4"><i class="fas fa-shield-alt"></i></div>
+                    <p class="text-sm font-medium leading-relaxed">El pago oportuno de la <strong class="text-uce-gold">Patente de Conservación</strong> es vital, ya que es el requisito económico indispensable establecido en el Art. 2805 para mantener vigente el derecho minero.</p>
+                </div>
+                <div class="bg-white text-gray-800 border border-gray-200 p-6 rounded-xl shadow-card interactive-card">
+                    <div class="text-3xl text-gray-400 mb-4"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <p class="text-sm font-medium leading-relaxed">Además de regalías y patentes, el titular minero debe asumir <strong class="text-uce-blue">tasas administrativas, costos registrales de la U.A.P. y obligaciones tributarias nacionales</strong>.</p>
+                </div>
+                <div class="bg-white text-gray-800 border border-gray-200 p-6 rounded-xl shadow-card interactive-card lg:col-span-2">
+                    <div class="text-3xl text-red-400 mb-4"><i class="fas fa-exclamation-triangle"></i></div>
+                    <p class="text-sm font-medium leading-relaxed">El incumplimiento de estas obligaciones genera graves consecuencias legales, desde <strong class="text-red-500">sanciones pecuniarias y multas coactivas</strong> hasta la <strong class="text-red-500">caducidad o revocatoria</strong> de la concesión minera.</p>
+                </div>
+                <div class="bg-green-600 text-white p-6 rounded-xl shadow-card interactive-card">
+                    <div class="text-3xl text-green-300 mb-4"><i class="fas fa-tree"></i></div>
+                    <p class="text-sm font-medium leading-relaxed">Toda planificación de frentes de canteras debe incluir las provisiones financieras obligatorias para la <strong class="text-green-200">Recuperación Ambiental</strong> y el plan de cierre técnico.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center text-gray-400 text-sm">
+                <p>&copy; 2026 Universidad Central del Ecuador. Proyecto Académico.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script de lógica, navegación y gráficos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- NAVEGACIÓN Y MENÚ MÓVIL ---
+            const btnMobile = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            const links = document.querySelectorAll('.nav-link');
+            const mainContent = document.getElementById('main-content');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            btnMobile.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    if(window.innerWidth < 1024) toggleMenu();
+                });
+            });
+
+            // Scroll Spy (Resaltar menú activo)
+            const sections = document.querySelectorAll('section');
+            
+            mainContent.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Ajuste para detectar la sección visible considerando el scroll del main
+                    if (mainContent.scrollTop >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                links.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // --- CALCULADORA DE REGALÍAS ---
+            const veInput = document.getElementById('calc-ve');
+            const ctpInput = document.getElementById('calc-ctp');
+            const porcSelect = document.getElementById('calc-porcentaje');
+            const resCup = document.getElementById('res-cup');
+            const resRm = document.getElementById('res-rm');
+
+            function calcularRegalias() {
+                const ve = parseFloat(veInput.value) || 0;
+                const ctp = parseFloat(ctpInput.value) || 0;
+                const porc = parseFloat(porcSelect.value) / 100;
+
+                if (ve > 0) {
+                    const cup = ctp / ve;
+                    const rm = ctp * porc; // VE * CUP * porc simplifies mathematically to CTP * porc
+                    
+                    resCup.textContent = `$ ${cup.toFixed(2)}`;
+                    resRm.textContent = `$ ${rm.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                } else {
+                    resCup.textContent = '$ 0.00';
+                    resRm.textContent = '$ 0.00';
+                }
+            }
+
+            veInput.addEventListener('input', calcularRegalias);
+            ctpInput.addEventListener('input', calcularRegalias);
+            porcSelect.addEventListener('change', calcularRegalias);
+
+            // --- CALCULADORA DE PATENTES ---
+            window.setTarifa = function(valor) {
+                document.getElementById('calc-tarifa').value = valor;
+                calcularPatente();
+            };
+
+            const sbuInput = document.getElementById('calc-sbu');
+            const tarifaInput = document.getElementById('calc-tarifa');
+            const haInput = document.getElementById('calc-ha');
+            const resPatente = document.getElementById('res-patente');
+
+            function calcularPatente() {
+                const sbu = parseFloat(sbuInput.value) || 0;
+                const tarifa = parseFloat(tarifaInput.value) || 0;
+                const ha = parseFloat(haInput.value) || 0;
+
+                const patente = (sbu * tarifa) * ha;
+                resPatente.textContent = `$ ${patente.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+
+            sbuInput.addEventListener('input', calcularPatente);
+            haInput.addEventListener('input', calcularPatente);
+
+
+            // --- CONFIGURACIÓN DE GRÁFICOS (Chart.js) ---
+            Chart.defaults.font.family = "'Open Sans', sans-serif";
+            Chart.defaults.color = '#3D3D3D';
+
+            // 1. Gráfico Impacto Económico (Líneas)
+            const ctxImpact = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctxImpact, {
+                type: 'line',
+                data: {
+                    labels: ['2020', '2021', '2022', '2023', '2024', '2025(P)'],
+                    datasets: [{
+                        label: 'Recaudación por Regalías (Millones USD)',
+                        data: [2.1, 2.3, 2.8, 3.2, 3.5, 4.0],
+                        borderColor: '#18256D',
+                        backgroundColor: 'rgba(24, 37, 109, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#C58A2B',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // 2. Gráfico Costos de Producción (Dona)
+            const ctxCostos = document.getElementById('costosChart').getContext('2d');
+            new Chart(ctxCostos, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Costos Directos', 'Costos Indirectos'],
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: ['#18256D', '#B87333'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: function(context) { return context.label + ': ' + context.parsed + '%'; } } }
+                    }
+                }
+            });
+
+            // 3. Gráfico Tributos (Barras)
+            const ctxTributos = document.getElementById('tributosChart').getContext('2d');
+            new Chart(ctxTributos, {
+                type: 'bar',
+                data: {
+                    labels: ['Ingresos Brutos', 'Costos Deductibles', 'Utilidad Neta', 'Impuesto Renta (25%)'],
+                    datasets: [{
+                        label: 'Estructura Financiera',
+                        data: [100, 60, 40, 10], // Porcentajes ilustrativos
+                        backgroundColor: [
+                            'rgba(200, 200, 200, 0.6)', 
+                            'rgba(255, 99, 132, 0.6)', 
+                            'rgba(75, 192, 192, 0.6)', 
+                            '#16a34a' // Verde para el IR
+                        ],
+                        borderColor: [
+                            'rgb(200, 200, 200)',
+                            'rgb(255, 99, 132)',
+                            'rgb(75, 192, 192)',
+                            '#15803d'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100, title: {display: true, text: '%'} } }
+                }
+            });
+
+            // Inicializar cálculos al cargar
+            calcularRegalias();
+            calcularPatente();
+        });
+    </script>
+</body>
+</html>
+
+ 
